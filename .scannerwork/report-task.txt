@@ -1,0 +1,7 @@
+organization=alimaleky7997-github
+projectKey=AliMaleky7997_software_eng_project
+serverUrl=https://sonarcloud.io
+serverVersion=7.9.0.26601
+dashboardUrl=https://sonarcloud.io/dashboard?id=AliMaleky7997_software_eng_project
+ceTaskId=AWuYS0RdSpQKKPwUJf7q
+ceTaskUrl=https://sonarcloud.io/api/ce/task?id=AWuYS0RdSpQKKPwUJf7q

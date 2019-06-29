@@ -1,0 +1,242 @@
+{% extends "master.html" %}
+
+{% block content %}
+    <head>
+        <link rel="stylesheet" href="/static/css/Panels.css">
+    </head>
+    <body onload="searchAds()"></body>
+
+    <div id="wrapper" class="row" style="padding-bottom:20px;">
+
+        <div id="sidebar-wrapper" class="col-3" align="center" style="padding-right: 50px;">
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="form-group row">
+                    <label for="title" class="col-form-label">عنوان&nbsp;&nbsp;</label>
+                    <div class="col-sm-9">
+                        <input type="text" class="form-control" id="title"
+                               name="title"
+                               dir="rtl">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="select1" class="col-form-label">دسته‌بندی سطح ۱</label>
+                    <div class="col-sm-5 ">
+                        <select class="form-control" id="select1" name="select1" dir="rtl">
+                            <option value="">---------</option>
+                            {% for category in cats %}
+                                <option value="{{ category.id }}">{{ category.title }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="select2" class="col-form-label">دسته‌بندی سطح ۲</label>
+                    <div class="col-sm-5 ">
+                        <select class="form-control" id="select2" name="select2" dir="rtl">
+                            <option value="">---------</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="category" class="col-form-label">دسته‌بندی سطح ۳</label>
+                    <div class="col-sm-5 ">
+                        <select class="form-control" id="category" name="category" dir="rtl">
+                            <option value="">---------</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label for="price_low" class="col-form-label">قیمت از</label>
+                    <div class="col-sm-5">
+                        <input type="number" class="form-control" id="price_low"
+                               name="price_low" min="-1"
+                               dir="ltr">
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label for="price_high" class="col-form-label">قیمت تا</label>
+                    <div class="col-sm-5">
+                        <input type="number" class="form-control" id="price_high"
+                               name="price_high" min="-1"
+                               dir="ltr">
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label for="state" class="col-form-label">استان&nbsp;&nbsp;</label>
+                    <div class="col-sm-5 ">
+                        <select class="form-control" id="state" name="state"
+                                onchange="showCity(this.value)">
+                            <option value=""></option>
+                            <option value="آذربایجان شرقی">آذربایجان شرقی</option>
+                            <option value="آذربایجان غربی">آذربایجان غربی</option>
+                            <option value="اردبیل">اردبیل</option>
+                            <option value="اصفهان">اصفهان</option>
+                            <option value="ایلام">ایلام</option>
+                            <option value="بوشهر">بوشهر</option>
+                            <option value="تهران">تهران</option>
+                            <option value="چهارمحال و بختیاری">چهارمحال و بختیاری</option>
+                            <option value="خراسان جنوبی">خراسان جنوبی</option>
+                            <option value="خراسان رضوی">خراسان رضوی</option>
+                            <option value="خراسان شمالی">خراسان شمالی</option>
+                            <option value="خوزستان">خوزستان</option>
+                            <option value="زنجان">زنجان</option>
+                            <option value="سمنان">سمنان</option>
+                            <option value="سیستان و بلوچستان">سیستان و بلوچستان</option>
+                            <option value="فارس">فارس</option>
+                            <option value="قزوین">قزوین</option>
+                            <option value="قم">قم</option>
+                            <option value="کردستان">کردستان</option>
+                            <option value="کرمان">کرمان</option>
+                            <option value="کرمانشاه">کرمانشاه</option>
+                            <option value="کهگیلویه و بویراحمد">کهگیلویه و بویراحمد</option>
+                            <option value="گلستان">گلستان</option>
+                            <option value="گیلان">گیلان</option>
+                            <option value="لرستان">لرستان</option>
+                            <option value="مازندران">مازندران</option>
+                            <option value="مرکزی">مرکزی</option>
+                            <option value="هرمزگان">هرمزگان</option>
+                            <option value="همدان">همدان</option>
+                            <option value="یزد">یزد</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label for="city" class="col-form-label">شهر&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+                    <div class="col-sm-5 ">
+                        <select class="form-control" id="city" name="city">
+                        </select>
+                    </div>
+                </div>
+
+
+                <div class="form-group row">
+                    <label for="is_urgent" class=" col-form-label">فوری&nbsp;&nbsp;&nbsp;&nbsp;</label>
+                    <div class="col-sm-1">
+                        <div class="checkbox">
+                            <input type="checkbox" id="is_urgent" name="is_urgent">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label for="is_image" class=" col-form-label">عکس‌دار&nbsp;&nbsp;&nbsp;&nbsp;</label>
+                    <div class="col-sm-1">
+                        <div class="checkbox">
+                            <input type="checkbox" id="is_image" name="is_image">
+                        </div>
+                    </div>
+                </div>
+
+                <table class="table">
+                    {{ images }}
+                </table>
+
+                <div class="form-group row mb-0">
+                    <div class="col-md-8 offset-md-4">
+                        <button type="button" class="btn btn-outline-primary" id="search" name="search"
+                                onclick="searchAds('search')">
+                            جستجو
+                        </button>
+                    </div>
+                </div>
+
+            </form>
+        </div>
+
+        <div id="list_of_ads" class="col-9" align="center" style="padding-left: 50px; padding-right: 50px">
+        </div>
+
+        <div id="sidebar-wrapper" class="col-3" align="center" style="padding-right: 50px;">
+        </div>
+
+        <div class="col-lg-4 mb-4">
+            <div class="form-group row mb-0">
+                <div class="col-md-8 offset-md-4">
+                    <button type="button" class="btn btn-outline-primary" onclick="searchAds('prev')">
+                        صفحهٔ قبل
+                    </button>
+                    <button type="button" class="btn btn-outline-primary" onclick="searchAds('next')">
+                        صفحهٔ بعد
+                    </button>
+                </div>
+            </div>
+            <br>
+            <div class="form-group row">
+                <label for="page" class="col-form-label">برو به صفحهٔ</label>
+                <div class="col-sm-4">
+                    <input type="number" class="form-control" id="page"
+                           name="page"
+                           dir="rtl" width="5">
+                </div>
+                <button type="button" class="btn btn-outline-primary" onclick="searchAds('goto')">
+                    برو
+                </button>
+
+            </div>
+
+            <br>
+
+        </div>
+
+    </div>
+
+    <script src="/static/js/category_dropdown.js"></script>
+
+    <script>
+        var previousData = '';
+        var previousPage = 1;
+        var isNewSearch = false;
+
+        function searchAds(usage) {
+            var current_page = parseInt(document.getElementById("page").value);
+
+            if (isNaN(current_page) || current_page < 1) {
+                document.getElementById("page").value = 1;
+            } else if (this.maxPage && current_page > this.maxPage && !isNewSearch) {
+                document.getElementById("page").value = this.maxPage;
+            } else if (current_page > {{ max_possible_page }}) {
+                document.getElementById("page").value = {{ max_possible_page }};
+            } else {
+                document.getElementById("page").value = current_page;
+            }
+
+            if (usage == 'prev' && document.getElementById("page").value > 1) {
+                document.getElementById("page").value = parseInt(document.getElementById("page").value) - 1;
+            } else if (usage == 'next' && document.getElementById("page").value < {{ max_possible_page }} &&
+                (!this.maxPage || isNewSearch || document.getElementById("page").value < this.maxPage)) {
+                document.getElementById("page").value = parseInt(document.getElementById("page").value) + 1;
+            } else if (usage == 'search') {
+                document.getElementById("page").value = 1;
+            }
+
+            if (usage == 'search')
+                isNewSearch = true;
+            else
+                isNewSearch = false;
+
+            var page = document.getElementById("page").value;
+
+            $.ajax({
+                url: '{% url 'ads:search' %}' + '?' + $('form').serialize() + '&page=' + page,
+                data: {},
+                success: function (data) {
+                    $('#list_of_ads').html(data);
+                    if (data == previousData && usage == 'next' && page == 2) {
+                        document.getElementById("page").value = parseInt(document.getElementById("page").value) - 1;
+                    } else if (data == previousData && usage == 'goto' && previousPage == 1 && page != previousPage) {
+                        document.getElementById("page").value = previousPage;
+                    }
+                    previousData = data;
+                    previousPage = page;
+                }
+            });
+            this.maxPage = document.getElementById("maxPage").value;
+        }
+    </script>
+{% endblock content %}
+
